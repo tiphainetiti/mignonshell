@@ -6,13 +6,13 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 14:43:58 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/15 18:22:12 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/22 18:41:01 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static bool	is_whitespace(char c)
+bool	is_whitespace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v'
 		|| c == '\f');
@@ -82,10 +82,7 @@ static void	extract_token(char **input, t_token **tokens, t_data *data)
 			*input += 2;
 			// Set heredoc flag if needed
 			if (ft_strncmp(temp, "<<", 2) == 0)
-			{
 				data->is_heredoc = 1;
-				printf("is_heredoc = %d\n", data->is_heredoc);
-			}
 		}
 		else
 		{

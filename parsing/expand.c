@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:04:16 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 17:37:51 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/22 18:42:15 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,9 @@ char	*expand_variables(char *value, t_data *data)
 			{
 				// Extraction du nom de variable
 				var_name = ft_substr(value, var_start, var_len);
+				// printf("var_name : %s\n", var_name);
 				var_value = get_expanded(var_name, var_len, env);
+				// printf("var_value : %s\n", var_value);
 				// Ajout au résultat
 				if (var_value)
 				{
@@ -154,25 +156,85 @@ char	*expand_variables(char *value, t_data *data)
 	return (result);
 }
 
+// t_token	*expand_tokens(t_token *tokens, t_data *data)
+// {
+// 	t_token	*current;
+// 	t_token	*head;
+// 	char	*expanded;
+
+// 	current = tokens;
+// 	head = tokens;
+// 	while (current)
+// 	{
+// 		if (current->type == COMMAND)
+// 		{
+// 			expanded = expand_variables(current->value, data);
+// 			if (expanded)
+// 			{
+// 				free(current->value);
+// 				current->value = expanded;
+// 			}
+// 		}
+// 		current = current->next;
+// 	}
+// 	return (head);
+// }
+
 t_token	*expand_tokens(t_token *tokens, t_data *data)
 {
 	t_token	*current;
 	t_token	*head;
+	t_token	*prev;
 	char	*expanded;
+	int		i;
+	t_token	*to_free;
 
 	current = tokens;
 	head = tokens;
+	prev = NULL;
 	while (current)
 	{
 		if (current->type == COMMAND)
 		{
 			expanded = expand_variables(current->value, data);
-			if (expanded)
+			free(current->value);
+			current->value = expanded;
+			// Check if the expanded command is empty or only whitespace
+			if (expanded && *expanded)
 			{
-				free(current->value);
-				current->value = expanded;
+				// Check if it's only whitespace
+				i = 0;
+				while (expanded[i] && is_whitespace(expanded[i]))
+					i++;
+				if (!expanded[i]) // Only whitespace or empty
+				{
+					// Skip this token by removing it from the list
+					to_free = current;
+					if (prev)
+						prev->next = current->next;
+					else
+						head = current->next;
+					current = current->next;
+					free(to_free->value);
+					free(to_free);
+					continue ;
+				}
+			}
+			else if (!expanded || !*expanded)
+			{
+				// Same as above - remove empty token
+				to_free = current;
+				if (prev)
+					prev->next = current->next;
+				else
+					head = current->next;
+				current = current->next;
+				free(to_free->value);
+				free(to_free);
+				continue ;
 			}
 		}
+		prev = current;
 		current = current->next;
 	}
 	return (head);

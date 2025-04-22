@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:24:36 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 17:24:46 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/22 18:23:12 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,4 +196,84 @@ char	*ft_strdups(const char *s)
 	if (dup)
 		ft_memcpy(dup, s, len);
 	return (dup);
+}
+
+// Fonction pour afficher les tokens (debug)
+void	print_tokens(t_token *tokens)
+{
+	t_token	*current;
+	int		i;
+
+	current = tokens;
+	i = 0;
+	printf("\n--- TOKENS ---\n");
+	while (current)
+	{
+		printf("Token %d: [%s] - Type: ", i++, current->value);
+		if (current->type == COMMAND)
+			printf("COMMAND\n");
+		else if (current->type == PIPE)
+			printf("PIPE\n");
+		else if (current->type == REDIRECTION)
+			printf("REDIRECTION\n");
+		else
+			printf("UNKNOWN (%zu)\n", current->type);
+		current = current->next;
+	}
+	printf("-------------\n\n");
+}
+
+// Print command structures
+void	print_commands(t_cmd *cmds)
+{
+	t_cmd		*current_cmd;
+	t_inofile	*current_file;
+	int			cmd_idx;
+	int			arg_idx;
+
+	current_cmd = cmds;
+	cmd_idx = 0;
+	printf("\n=== COMMANDS ===\n");
+	while (current_cmd)
+	{
+		printf("Command %d:\n", cmd_idx++);
+		// Print arguments
+		if (current_cmd->cmd)
+		{
+			printf("  Arguments:\n");
+			arg_idx = 0;
+			while (current_cmd->cmd[arg_idx])
+			{
+				printf("    [%d]: '%s'\n", arg_idx, current_cmd->cmd[arg_idx]);
+				arg_idx++;
+			}
+		}
+		else
+			printf("  No arguments\n");
+		// Print redirections
+		printf("  Redirections (%d):\n", current_cmd->nb_file);
+		current_file = current_cmd->file;
+		while (current_file)
+		{
+			printf("    Type: ");
+			if (current_file->type == INFILE)
+				printf("INPUT (<)");
+			else if (current_file->type == OUTFILE)
+				printf("OUTPUT (>)");
+			else if (current_file->type == APPEND)
+				printf("APPEND (>>)");
+			else if (current_file->type == HERE_DOC)
+				printf("HEREDOC (<<)");
+			else
+				printf("UNKNOWN (%d)", current_file->type);
+			printf(", File: '%s'\n", current_file->filename);
+			current_file = current_file->next;
+		}
+		// Print pipe information
+		if (current_cmd->next)
+			printf("  [PIPE] -> Command %d\n", cmd_idx);
+		printf("\n");
+		current_cmd = current_cmd->next;
+	}
+	printf("===============\n\n");
 }

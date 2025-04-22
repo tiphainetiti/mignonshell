@@ -1,0 +1,256 @@
+A DEMANDER
+echo "quote with \"unclosed nested : quel comportement ?
+
+ls | > file.txt : dans le shell creer file.txt et rien dedans, dans mon parsing
+minishell: syntax error near unexpected token `>'
+
+
+
+# Structure de Parsing pour Minishell
+parsing/
+├── token.c       -> Tokenisation (ci-dessus)
+├── syntax.c      -> Vérification de la syntaxe
+├── expansion.c   -> Expansion des variables
+├── cmd_builder.c -> Construction des commandes
+└── utils.c       -> Fonctions utilitaires
+
+1. check_syntax - Dans syntax.c:
+Vérifier les pipes mal placés (| au début/fin, ||)
+Vérifier les redirections sans fichier associé
+Vérifier les quotes non fermées
+expand_tokens - Dans expansion.c:
+
+2. expand_tokens - Dans expansion.c:
+Remplacer les variables ($USER, $HOME)
+Gérer $? pour le code de retour
+Respecter les règles des guillemets simples/doubles
+build_commands - Dans cmd_builder.c:
+
+3.build_commands - Dans cmd_builder.c:
+Créer les structures t_cmd
+Traiter les arguments de commande
+Configurer les redirections avec t_inofile
+
+## 1. Architecture Globale
+
+```
+Entrée (Input) → Tokenisation → Vérification Syntaxique → Expansion → Construction des Commandes → Exécution
+```
+
+## 2. Modules Principaux
+
+### Tokenization (`token.c`, utils_token.c, utils_token2.c)
+- Découpe l'entrée utilisateur en tokens
+- `tokenize()` est le point d'entrée principal
+- `identify_type()` détermine le type de chaque token (COMMAND, PIPE, REDIRECTION, HEREDOC)
+- Gère les guillemets et caractères spéciaux
+
+### Vérification Syntaxique (`error_syntax.c`, error_syntax2.c)
+- `check_syntax_errors()` valide la syntaxe (quotes fermées, pipes bien placés)
+- Affiche des messages d'erreur appropriés
+
+### Expansion (`expand.c`, `expand2.c`, etc.)
+- `expand_variable()` remplace les variables d'environnement
+- Gère différemment l'expansion selon le contexte des guillemets
+
+### Construction des Commandes (`pars.c` à pars5.c)
+- `pars_cmd()` transforme les tokens en structures de commandes exécutables
+- `handle_redirections()` traite les redirections d'entrée/sortie
+- `process_cmd_str()` construit les arguments de commande finaux
+
+## 3. Flux de Données
+
+1. L'entrée utilisateur est tokenisée
+2. Les tokens sont vérifiés pour les erreurs de syntaxe
+3. Les variables sont expandées dans les tokens appropriés
+4. Les tokens sont assemblés en commandes avec leurs arguments et redirections
+5. Les commandes sont reliées par des pipes si nécessaire
+6. Le résultat est une structure de données prête pour l'exécution
+
+## 4. Structures de Données Clés
+
+- `t_token`: Représente un token avec sa valeur et son type
+- `t_cmd`: Structure de commande avec arguments et fichiers de redirection
+- `t_inofile`: Gère les redirections d'entrée/sortie
+- `t_data`: Structure globale pour stocker l'état du shell
+
+Cette architecture est bien organisée et suit les principes de conception d'un shell moderne. La séparation claire des différentes étapes de parsing facilite la maintenance et les extensions futures.
+
+
+
+Plan d'Implémentation
+Étape 1: Mettre en place les fondations
+// Fonction principale du parsing
+t_data *parse_input(char *input, char **env)
+{
+    t_data *data = init_data(env);
+    if (!data)
+        return NULL;
+    
+    // Initialisation des structures
+    data->token = NULL;
+    data->cmd = NULL;
+    
+    // Parsing en étapes
+    if (!tokenize(input, data))
+        return handle_error(data, "Tokenization error");
+    
+    if (!check_syntax(data))
+        return handle_error(data, "Syntax error");
+    
+    if (!build_commands(data))
+        return handle_error(data, "Command building error");
+    
+    return data;
+}
+
+Étape 2: Créer le Tokenizer
+bool tokenize(char *input, t_data *data)
+{
+    t_token *head = NULL;
+    char *cursor = input;
+    
+    // Parcourir l'entrée caractère par caractère
+    while (*cursor)
+    {
+        // Ignorer les espaces
+        if (is_whitespace(*cursor))
+        {
+            cursor++;
+            continue;
+        }
+        
+        // Détecter et créer les tokens
+        if (*cursor == '|')
+            add_token(&head, "|", PIPE);
+        else if (*cursor == '<' || *cursor == '>')
+            handle_redirection(&cursor, &head, data);
+        else
+            handle_word(&cursor, &head, data);
+    }
+    
+    data->token = head;
+    return true;
+}
+
+Étape 3: Vérifier la Syntaxe
+bool check_syntax(t_data *data)
+{
+    // Vérifier que les pipes sont bien formés
+    // Vérifier que les redirections ont des fichiers
+    // Vérifier que les guillemets sont fermés
+    
+    return true; // Si tout est correct
+}
+
+Étape 4: Construction des Commandes
+bool build_commands(t_data *data)
+{
+    t_cmd *cmd_head = NULL;
+    t_token *current = data->token;
+    
+    // Créer la première commande
+    t_cmd *current_cmd = create_command();
+    cmd_head = current_cmd;
+    
+    while (current)
+    {
+        if (current->type == COMMAND)
+            add_arg_to_command(current_cmd, current->value);
+        else if (current->type == REDIRECTION)
+            handle_redirection_for_cmd(current_cmd, current);
+        else if (current->type == PIPE)
+        {
+            // Créer nouvelle commande
+            t_cmd *new_cmd = create_command();
+            current_cmd->next = new_cmd;
+            current_cmd = new_cmd;
+        }
+        
+        current = current->next;
+    }
+    
+    data->cmd = cmd_head;
+    return true;
+}
+
+
+Commencer par un Prototype Minimal
+Créez d'abord un tokenizer simple qui reconnaît seulement:
+
+Commandes simples (ls, echo, etc.)
+Pipes (|)
+Redirections basiques (>, <)
+Testez avec des commandes simples:
+ls -la
+echo hello
+ls | grep a
+cat < file.txt
+
+Ajoutez ensuite progressivement:
+
+Gestion des guillemets
+Expansions de variables
+Redirections avancées (>>, <<)
+Gestion des erreurs
+
+
+15/04 : tokenize
+char **input
+*(*input + 1)
+*input : premier dereferencement, accede a la valeur vers laquelle input pointe
+*input + 1 : adresse de la valeur suivante
+*(*input + 1) : second dereferencement, accede au caractère dans cette adresse ('>') 
+
+    - Syntax OK
+Suite : Expand
+
+16/04 : EXPAND
+Hors guillemets: toutes les variables sont expandées
+Guillemets doubles ("): les variables sont expandées
+Guillemets simples ('): aucune expansion n'a lieu
+
+Résumé des Cas à Gérer pour les Expansions
+
+1. Expansions des Variables d'Environnement
+$VAR → Remplacer par la valeur de la variable
+$NON_EXISTANT → Remplacer par une chaîne vide
+${VAR} → Même comportement que $VAR (si vous implémentez cette syntaxe)
+$1, $2, ... → Arguments de position (optionnel pour minishell)
+
+2. Cas Spécial: Code de Sortie
+$? → Remplacer par le dernier code de sortie (data->exit_code)
+
+3. Comportement selon les Guillemets
+Pas de guillemets: Expansion complète + découpage par espaces
+echo $USER → affiche "username" sans guillemets
+Simples quotes ('): Aucune expansion
+echo '$USER' → affiche "$USER" littéralement
+Doubles quotes ("): Expansion mais sans découpage
+echo "$USER" → affiche "username" comme un seul mot
+
+4. Cas Complexes
+Guillemets imbriqués: echo "'$USER'" → affiche "'username'"
+Guillemets consécutifs: echo "" ou echo '' → affiche ligne vide
+Variables partielles: echo $USER_SUFFIX → cherche la variable USER_SUFFIX, pas USER
+$ suivi d'un caractère spécial: echo $"hello" ou echo $- → comportements spécifiques
+Caractères non-alphanumériques: $1, $@, etc. (optionnels pour minishell)
+
+5. Contextes Particuliers
+Redirections: Expansion avant ouverture de fichiers
+ls > $FILENAME → redirection vers la valeur de FILENAME
+Heredocs (<<): Généralement pas d'expansion (sauf configuration)
+<< EOF → les variables à l'intérieur ne sont pas expansées
+
+6. Erreurs et Cas Limites
+$ à la fin d'une chaîne: echo $ → affiche "$"
+$ suivi d'espace: echo $ USER → affiche "$ USER"
+Limites de taille: Gérer l'allocation pour de grandes expansions
+
+
+SUITE : Construction des commandes
+
+
+
+22/04 : Fusion OK, commencement des tests
+$HOMEjfpdavjopd : revoir expand.c --> t_token	*expand_tokens(t_token *tokens, t_data *data)
