@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 18:41:06 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/23 12:24:41 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,11 @@ bool	is_whitespace(char c);
 t_token	*tokenize(char *input, t_data *data);
 
 // utils.c
-void	free_cmds(t_cmd *cmd);
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd **cmd);
 void	free_limiter(t_limiter *limiter);
 void	free_limiter_list(t_limiter **limiter);
 void	free_redirection(t_inofile *file);
-void	free_commands(t_cmd *cmds);
 void	free_tokens(t_token *tokens);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strdups(const char *s);

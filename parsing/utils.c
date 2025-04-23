@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:24:36 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 18:23:12 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/23 12:24:50 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,41 +56,6 @@ void	free_cmd_list(t_cmd **cmd)
 	cmd = NULL;
 }
 
-void	free_cmds(t_cmd *cmd)
-{
-	t_cmd		*current;
-	t_cmd		*next;
-	t_inofile	*file;
-	t_inofile	*next_file;
-	int			i;
-
-	current = cmd;
-	while (current)
-	{
-		// Libérer les arguments
-		if (current->cmd)
-		{
-			i = 0;
-			while (current->cmd[i])
-				free(current->cmd[i++]);
-			free(current->cmd);
-		}
-		// Libérer les redirections
-		file = current->file;
-		while (file)
-		{
-			next_file = file->next;
-			if (file->filename)
-				free(file->filename);
-			free(file);
-			file = next_file;
-		}
-		next = current->next;
-		free(current);
-		current = next;
-	}
-}
-
 void	free_limiter(t_limiter *limiter)
 {
 	if (limiter != NULL)
@@ -126,32 +91,6 @@ void	free_redirection(t_inofile *file)
 	{
 		if (current->filename)
 			free(current->filename);
-		next = current->next;
-		free(current);
-		current = next;
-	}
-}
-
-void	free_commands(t_cmd *cmds)
-{
-	t_cmd	*current;
-	t_cmd	*next;
-	int		i;
-
-	current = cmds;
-	while (current)
-	{
-		if (current->cmd)
-		{
-			i = 0;
-			while (current->cmd[i])
-			{
-				free(current->cmd[i]);
-				i++;
-			}
-			free(current->cmd);
-		}
-		free_redirection(current->file);
 		next = current->next;
 		free(current);
 		current = next;

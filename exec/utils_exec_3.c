@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_exec_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:53:56 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/25 16:44:43 by ocussy           ###   ########.fr       */
+/*   Updated: 2025/04/23 13:12:17 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,31 @@ void	wait_parent(t_data *data)
 		close(data->fd[READ_FD]);
 }
 
+// void	do_execve(t_data *data, char **tab)
+// {
+// 	execve(data->path, data->cmd->cmd, tab);
+// 	perror("execve");
+// 	ft_free_tab(tab);
+// 	data->exit_code = 127;
+// 	exit_shell(data, 0, data->exit_code);
+// }
+
 void	do_execve(t_data *data, char **tab)
 {
+	struct stat	path_stat;
+
+	if (stat(data->path, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(data->path, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			ft_free_tab(tab);
+			data->exit_code = 126;
+			exit_shell(data, 0, data->exit_code);
+		}
+	}
 	execve(data->path, data->cmd->cmd, tab);
 	perror("execve");
 	ft_free_tab(tab);
@@ -63,9 +86,9 @@ void	print_exit_shell(t_data *data, int i)
 		ft_putendl_fd(": command not found", 2);
 	}
 	if (i == 2)
-		ft_putstr_fd("Erreur lors de l'allocation de la memoire.\n", 2);
+		ft_putstr_fd("bash: cannot allocate memory\n", 2);
 	if (i == 3)
-		ft_putstr_fd("Erreur de pipe ou creation processus enfant\n", 2);
+		ft_putstr_fd("bash: pipe error or child process creation\n", 2);
 	if (i == 4 && errno == EACCES)
 	{
 		ft_putstr_fd("bash: ", 2);

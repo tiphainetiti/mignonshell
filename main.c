@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:35:29 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 18:45:27 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/23 18:41:13 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	do_minishell(t_data *data, char *input)
 	t_token	*token;
 
 	token = tokenize(input, data);
+	print_tokens(token);
 	if (!token)
 	{
 		free(input);

@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:49:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 18:45:04 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/23 19:02:50 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,44 @@ t_cmd	*create_command(void)
 	return (cmd);
 }
 
+// Remove quotes from command or file
+char	*remove_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+	int		in_single_quotes;
+	int		in_doubles_quotes;
+
+	i = 0;
+	j = 0;
+	in_single_quotes = 0;
+	in_doubles_quotes = 0;
+	if (!str)
+		return (NULL);
+	result = malloc(sizeof(char) * ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	while (str[i])
+	{
+		if (str[i] == '"' && !in_single_quotes)
+			in_doubles_quotes = !in_doubles_quotes;
+		else if (str[i] == '\'' && !in_doubles_quotes)
+			in_single_quotes = !in_single_quotes;
+		else
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+
 // Add a argument to the command
 void	add_arg_to_command(t_cmd *cmd, char *arg)
 {
 	int		i;
 	char	**new_cmd;
+	char	*unquoted_arg;
 
 	i = 0;
 	while (cmd->cmd[i])
@@ -51,7 +84,10 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 		new_cmd[i] = cmd->cmd[i];
 		i++;
 	}
-	new_cmd[i] = ft_strdup(arg);
+	unquoted_arg = remove_quotes(arg);
+	if (!unquoted_arg)
+		return (free(new_cmd));
+	new_cmd[i] = unquoted_arg;
 	new_cmd[i + 1] = NULL;
 	free(cmd->cmd);
 	cmd->cmd = new_cmd;
@@ -62,13 +98,18 @@ void	add_redirection(t_cmd *cmd, char *filename, int type)
 {
 	t_inofile	*new_file;
 	t_inofile	*current;
-	int			i;
+	char		*unquoted_filename;
 
-	i = 0;
 	new_file = malloc(sizeof(t_inofile));
 	if (!new_file)
 		return ;
-	new_file->filename = ft_strdup(filename);
+	unquoted_filename = remove_quotes(filename);
+	if (!unquoted_filename)
+	{
+		free(new_file);
+		return ;
+	}
+	new_file->filename = unquoted_filename;
 	new_file->type = type;
 	new_file->next = NULL;
 	if (!cmd->file)
@@ -85,9 +126,9 @@ void	add_redirection(t_cmd *cmd, char *filename, int type)
 
 int	convert_redirection_type(char *token_value)
 {
-	if (ft_strncmp(token_value, "<", 1) == 0)
+	if (ft_strncmp(token_value, "<", 2) == 0)
 		return (INFILE);
-	else if (ft_strncmp(token_value, ">", 1) == 0)
+	else if (ft_strncmp(token_value, ">", 2) == 0)
 		return (OUTFILE);
 	else if (ft_strncmp(token_value, ">>", 2) == 0)
 		return (APPEND);

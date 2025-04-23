@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 16:19:52 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/16 11:59:01 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/23 13:43:48 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@ bool	print_quotes_error(char quotes_type, t_data *data)
 			quotes_type), false);
 }
 
+static bool	syntax_first_pipe(t_token *tokens, t_data *data)
+{
+	if (tokens && tokens->type == PIPE)
+		return (print_syntax_error(NULL, data));
+	return (true);
+}
+
 static bool	syntax_pipe(t_token *tokens, t_data *data)
 {
 	t_token	*current;
@@ -35,17 +42,16 @@ static bool	syntax_pipe(t_token *tokens, t_data *data)
 	if (!tokens)
 		return (true);
 	current = tokens;
-	if (current->type == PIPE)
-		return (print_syntax_error(NULL, data));
+	// if (current->type == PIPE)
+	// 	return (print_syntax_error(NULL, data));
 	while (current && current->next)
 	{
 		if (current->type == PIPE)
 		{
-			// PIPE follow by a PIPE or REDIR
 			if (current->next->type == PIPE)
 				return (print_syntax_error(NULL, data));
-			if (current->next->type == REDIRECTION)
-				return (print_syntax_error(current->next->value, data));
+			// if (current->next->type == REDIRECTION)
+			// 	return (print_syntax_error(current->next->value, data));
 		}
 		current = current->next;
 	}
@@ -64,10 +70,28 @@ static bool	syntax_redir(t_token *tokens, t_data *data)
 	{
 		if (current->type == REDIRECTION)
 		{
-			// Last node
-			if (!current->next)
+			// Vérifier d'abord si une redirection est suivie d'un pipe
+			if (current->next && current->next->type == PIPE)
+				return (print_syntax_error(current->next->value, data));
+			// Ensuite vérifier les autres cas
+			else if (current->next && current->next->type == REDIRECTION)
+			{
+				if (ft_strcmp(current->value, "<") == 0
+					&& ft_strcmp(current->next->value, ">") == 0)
+				{
+					if (!current->next->next)
+						return (print_syntax_error("newline", data));
+					if (current->next->next->type != COMMAND)
+						return (print_syntax_error(current->next->next->value,
+								data));
+					current = current->next;
+				}
+				else
+					return (print_syntax_error(current->next->value, data));
+			}
+			else if (!current->next)
 				return (print_syntax_error("newline", data));
-			if (current->next->type != COMMAND)
+			else if (current->next->type != COMMAND)
 				return (print_syntax_error(current->next->value, data));
 		}
 		current = current->next;
@@ -110,10 +134,9 @@ static bool	syntax_quotes(t_token *tokens, t_data *data)
 }
 
 bool	check_syntax(t_token *tokens, t_data *data)
-
 {
-	if (!syntax_pipe(tokens, data) || !syntax_redir(tokens, data)
-		|| !syntax_quotes(tokens, data))
+	if (!syntax_first_pipe(tokens, data) || !syntax_pipe(tokens, data)
+		|| !syntax_redir(tokens, data) || !syntax_quotes(tokens, data))
 		return (false);
 	return (true);
 }
