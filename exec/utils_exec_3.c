@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:53:56 by ocussy            #+#    #+#             */
-/*   Updated: 2025/04/24 16:18:03 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/24 18:48:34 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,6 @@ void	wait_parent(t_data *data)
 
 void	do_execve(t_data *data, char **tab)
 {
-	struct stat	path_stat;
-
-	if (data->path != NULL && stat(data->path, &path_stat) == 0
-		&& S_ISDIR(path_stat.st_mode))
-		exit_shell(data, 6, 126);
 	execve(data->path, data->cmd->cmd, tab);
 	perror("execve");
 	ft_free_tab(tab);
@@ -78,22 +73,6 @@ void	print_exit_shell(t_data *data, int i)
 		ft_putendl_fd(": Permission denied", 2);
 	}
 	print_exit_shell_dir(data, i);
-}
-
-void	print_exit_shell_dir(t_data *data, int i)
-{
-	if (i == 5)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->cmd->cmd[0], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
-	if (i == 6)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->path, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
 }
 
 void	handle_sigquit_command(int sig)

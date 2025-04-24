@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:35:29 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/24 15:30:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/24 18:46:09 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,24 +31,13 @@ void	do_minishell(t_data *data, char *input)
 	token = tokenize(input, data);
 	// print_tokens(token);
 	if (!token)
-	{
-		free(input);
-		return ;
-	}
+		return (free(input));
 	add_history(input);
 	if (!check_syntax(token, data))
-	{
-		free_tokens(token);
-		free(input);
-		return ;
-	}
+		return (free_tokens(token), free(input));
 	token = expand_tokens(token, data);
 	if (!build_commands(data, token))
-	{
-		free_tokens(token);
-		free(input);
-		return ;
-	}
+		return (free_tokens(token), free(input));
 	// print_commands(data->cmd);
 	exec(data);
 	if (data->pid)

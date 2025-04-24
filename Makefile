@@ -34,6 +34,7 @@ SRC_FILES = exec/exec.c \
 			exec/utils_exec.c \
 			exec/utils_exec_2.c\
 			exec/utils_exec_3.c \
+			exec/utils_exec_4.c \
 			exec/init_struct.c \
 			builtin/builtin.c\
 			builtin/cd_utils.c\

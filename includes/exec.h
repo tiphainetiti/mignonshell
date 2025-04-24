@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:18 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/24 16:18:02 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/24 17:50:53 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,16 @@ void	setup_and_execute_command(t_data *data);
 void	make_one_command(t_data *data);
 void	exec(t_data *data);
 
+// utils_exec_4
+void	check_dir_error(t_data *data);
+void	print_exit_shell_dir(t_data *data, int i);
+
 // utils_exec_3
 
 void	wait_parent(t_data *data);
 void	do_execve(t_data *data, char **tab);
 void	no_command(t_data *data);
 void	print_exit_shell(t_data *data, int i);
-void	print_exit_shell_dir(t_data *data, int i);
 void	handle_sigquit_command(int sig);
 
 // pipe
