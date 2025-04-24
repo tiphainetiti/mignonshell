@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:49:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/23 19:02:50 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/24 15:31:13 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,96 @@ char	*remove_quotes(char *str)
 	return (result);
 }
 
+static int	has_multiple_slashes(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !str[0])
+		return (0);
+	while (str[i] && str[i + 1])
+	{
+		if (str[i] == '/' && str[i + 1] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static int	number_of_final_slashes(const char *path)
+{
+	int	i;
+	int	len;
+	int	result;
+
+	len = ft_strlen(path);
+	i = len - 1;
+	result = 0;
+	while (i > 0 && path[i] == '/')
+	{
+		result++;
+		i--;
+	}
+	return (result);
+}
+
+char	*copy_final_slashes(char *normalized, int final_slashes, int j)
+{
+	while (final_slashes > 0)
+	{
+		normalized[j++] = '/';
+		final_slashes--;
+	}
+	normalized[j] = '\0';
+	return (normalized);
+}
+
+static char	*normalize_path(const char *path)
+{
+	int		i;
+	int		j;
+	int		final_slashes;
+	size_t	len;
+	char	*normalized;
+
+	i = 0;
+	j = 0;
+	final_slashes = number_of_final_slashes(path);
+	len = ft_strlen(path);
+	normalized = malloc(len + 1);
+	if (!normalized)
+		return (NULL);
+	if (path[i] == '/')
+	{
+		normalized[j++] = '/';
+		i++;
+		while (path[i] == '/')
+			i++;
+	}
+	while (path[i] && (i < (int)len - final_slashes))
+	{
+		if (path[i] == '/')
+		{
+			normalized[j++] = '/';
+			i++;
+			while (path[i] == '/' && (i < (int)len - final_slashes))
+				i++;
+		}
+		else
+			normalized[j++] = path[i++];
+	}
+	return (copy_final_slashes(normalized, final_slashes, j));
+}
+
 // Add a argument to the command
 void	add_arg_to_command(t_cmd *cmd, char *arg)
 {
 	int		i;
 	char	**new_cmd;
 	char	*unquoted_arg;
+	char	*normalized_arg;
 
+	normalized_arg = NULL;
 	i = 0;
 	while (cmd->cmd[i])
 		i++;
@@ -87,6 +170,15 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 	unquoted_arg = remove_quotes(arg);
 	if (!unquoted_arg)
 		return (free(new_cmd));
+	if (i == 0 && unquoted_arg[0] == '/' && has_multiple_slashes(unquoted_arg))
+	{
+		normalized_arg = normalize_path(unquoted_arg);
+		if (normalized_arg)
+		{
+			free(unquoted_arg);
+			unquoted_arg = normalized_arg;
+		}
+	}
 	new_cmd[i] = unquoted_arg;
 	new_cmd[i + 1] = NULL;
 	free(cmd->cmd);

@@ -3,14 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:58:04 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/25 17:53:13 by ocussy           ###   ########.fr       */
+/*   Updated: 2025/04/24 16:08:56 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
 #include "../includes/minishell.h"
 
 void	exit_shell(t_data *data, int i, int j)
@@ -33,12 +32,32 @@ void	exit_shell(t_data *data, int i, int j)
 	exit(data->exit_code);
 }
 
+int	only_slashes(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	if (data->cmd->cmd[0])
+	{
+		while (data->cmd->cmd[0][i])
+		{
+			if (data->cmd->cmd[0][i] != '/')
+				return (0);
+			i++;
+		}
+	}
+	return (1);
+}
+
 void	callexecve(t_data *data)
 {
 	char	**tab;
 
 	if (g_sig == 666)
 		exit_shell(data, 0, data->exit_code);
+	if (data->cmd->cmd[0] != NULL && data->cmd->cmd[0][0] == '/'
+		&& only_slashes(data) == 1)
+		exit_shell(data, 5, 126);
 	if (parsing_builtin(data) == 0 && data->cmd->cmd[0] != NULL)
 	{
 		get_path(data);
