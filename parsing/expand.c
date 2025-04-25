@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:04:16 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/23 18:09:25 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 16:36:17 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,108 +77,6 @@ void	update_quotes_state(char current_char, t_quotes *quotes)
 	else if (current_char == '\'' && !quotes->inside_double_quotes)
 		quotes->inside_single_quotes = !quotes->inside_single_quotes;
 }
-
-// char	*expand_variables(char *value, t_data *data)
-// {
-// 	t_envt		*env;
-// 	t_quotes	quotes;
-// 	int			i;
-// 	int			block_start;
-// 	char		*result;
-// 	char		*temp;
-// 	int			var_start;
-// 	int			var_len;
-// 	char		*var_name;
-// 	char		*var_value;
-// 	char		*exit_code;
-// 	char		*quoted_content;
-// 	int			start_quote;
-// 	int			end_quote;
-
-// 	env = data->envt;
-// 	quotes.inside_double_quotes = 0;
-// 	quotes.inside_single_quotes = 0;
-// 	i = 0;
-// 	block_start = 0;
-// 	result = ft_strdup("");
-// 	while (value[i])
-// 	{
-// 		update_quotes_state(value[i], &quotes);
-// 		// Expansion de variables
-// 		if (value[i] == '$' && !quotes.inside_single_quotes)
-// 		{
-// 			// Copie d'abord le texte entre block_start et i
-// 			if (i > block_start)
-// 				result = join_block(result, value, block_start, i);
-// 			start_quote = i + 1;         // Position du premier "
-// 			end_quote = start_quote + 1; // Commencer à chercher après le "
-// 			while (value[end_quote] && value[end_quote] != '"')
-// 				end_quote++;
-// 			// Si on a trouvé le guillemet fermant
-// 			if (value[end_quote] == '"')
-// 			{
-// 				// Ajouter le contenu entre guillemets (sans les guillemets)
-// 				quoted_content = ft_substr(value, start_quote + 1, end_quote
-// 						- start_quote - 1);
-// 				temp = ft_strjoin(result, quoted_content);
-// 				free(result);
-// 				free(quoted_content);
-// 				result = temp;
-// 				// Avancer après le guillemet fermant
-// 				i = end_quote + 1;
-// 				block_start = i;
-// 				continue ;
-// 			}
-// 			i++; // Saute le $
-// 			// Traite le cas spécial $?
-// 			if (value[i] == '?')
-// 			{
-// 				exit_code = ft_itoa(data->exit_code);
-// 				temp = ft_strjoin(result, exit_code);
-// 				free(result);
-// 				free(exit_code);
-// 				result = temp;
-// 				i++;
-// 				block_start = i;
-// 				continue ;
-// 			}
-// 			// Détermine la longueur du nom de variable
-// 			var_start = i;
-// 			var_len = get_var_name_length(value, i);
-// 			i += var_len;
-// 			if (var_len > 0)
-// 			{
-// 				// Extraction du nom de variable
-// 				var_name = ft_substr(value, var_start, var_len);
-// 				// printf("var_name : %s\n", var_name);
-// 				var_value = get_expanded(var_name, var_len, env);
-// 				// printf("var_value : %s\n", var_value);
-// 				// Ajout au résultat
-// 				if (var_value)
-// 				{
-// 					result = append_to_result(result, var_value);
-// 					free(var_value);
-// 				}
-// 				free(var_name);
-// 				block_start = i;
-// 				continue ;
-// 			}
-// 			else
-// 			{
-// 				// $ sans nom de variable valide - on le traite comme littéral
-// 				temp = ft_strjoin(result, "$");
-// 				free(result);
-// 				result = temp;
-// 				block_start = i;
-// 				continue ;
-// 			}
-// 		}
-// 		i++;
-// 	}
-// 	if (i > block_start)
-// 		result = join_block(result, value, block_start, i);
-// 	return (result);
-// }
 
 int	handle_quoted_expansion(char *value, int i, char quote_char, char **result,
 		int *new_i)
@@ -294,6 +192,7 @@ char	*expand_variables(char *value, t_data *data)
 	// Ajouter tout caractère restant
 	if (i > block_start)
 		result = join_block(result, value, block_start, i);
+	printf("RESULTaTs: %s\n", result);
 	return (result);
 }
 

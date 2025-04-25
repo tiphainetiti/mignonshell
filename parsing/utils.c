@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:24:36 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/23 12:24:50 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 15:27:09 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void	print_commands(t_cmd *cmds)
 			arg_idx = 0;
 			while (current_cmd->cmd[arg_idx])
 			{
-				printf("    [%d]: '%s'\n", arg_idx, current_cmd->cmd[arg_idx]);
+				printf("    [%d]: %s\n", arg_idx, current_cmd->cmd[arg_idx]);
 				arg_idx++;
 			}
 		}

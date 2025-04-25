@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:48:55 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/24 17:54:33 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 15:57:02 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,9 @@ void	check_dir_error(t_data *data)
 	}
 }
 
-void	print_exit_shell_dir(t_data *data, int i)
+void	handle_sigquit_command(int sig)
 {
-	if (i == 5)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->cmd->cmd[0], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-	}
-	if (i == 6)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(data->cmd->cmd[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-	}
+	(void)sig;
+	write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+	g_sig = 131;
 }

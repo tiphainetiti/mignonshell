@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:56 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/22 13:50:38 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 16:05:38 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_cmd
 	char **cmd;             // Tableau d'arguments (cmd[0] = commande)
 	struct s_inofile *file; // Liste des redirections
 	int nb_file;            // Nombre de redirections
+	int was_quoted;         // Il y avait des quotes en token
 	struct s_cmd *next;     // Commande suivante dans un pipeline
 
 }						t_cmd;

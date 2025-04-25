@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 12:49:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/24 15:31:13 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 16:10:26 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,52 @@ t_cmd	*create_command(void)
 	cmd->cmd[0] = NULL;
 	cmd->file = NULL;
 	cmd->nb_file = 0;
+	cmd->was_quoted = 0;
 	cmd->next = NULL;
 	return (cmd);
 }
 
+// Check if arg has only ' or " : 1-yes 0-no
+// int	has_only_quotes(char *str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] != '\'' && str[i] != '"')
+// 			return (0);
+// 		i++;
+// 	}
+// 	return (1);
+// }
+
+// Check if arg has multiple consecutive '/' : 1-yes 0-no
+static int	has_multiple_slashes(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !str[0])
+		return (0);
+	while (str[i] && str[i + 1])
+	{
+		if (str[i] == '/' && str[i + 1] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	was_quoted(char *str, char *result)
+{
+	if (ft_strlen(result) < ft_strlen(str))
+		return (1);
+	return (0);
+}
+
 // Remove quotes from command or file
-char	*remove_quotes(char *str)
+char	*remove_quotes(char *str, t_cmd *cmd)
 {
 	int		i;
 	int		j;
@@ -62,23 +102,8 @@ char	*remove_quotes(char *str)
 		i++;
 	}
 	result[j] = '\0';
+	cmd->was_quoted = was_quoted(str, result);
 	return (result);
-}
-
-static int	has_multiple_slashes(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str || !str[0])
-		return (0);
-	while (str[i] && str[i + 1])
-	{
-		if (str[i] == '/' && str[i + 1] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 static int	number_of_final_slashes(const char *path)
@@ -167,7 +192,7 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 		new_cmd[i] = cmd->cmd[i];
 		i++;
 	}
-	unquoted_arg = remove_quotes(arg);
+	unquoted_arg = remove_quotes(arg, cmd);
 	if (!unquoted_arg)
 		return (free(new_cmd));
 	if (i == 0 && unquoted_arg[0] == '/' && has_multiple_slashes(unquoted_arg))
@@ -195,7 +220,7 @@ void	add_redirection(t_cmd *cmd, char *filename, int type)
 	new_file = malloc(sizeof(t_inofile));
 	if (!new_file)
 		return ;
-	unquoted_filename = remove_quotes(filename);
+	unquoted_filename = remove_quotes(filename, cmd);
 	if (!unquoted_filename)
 	{
 		free(new_file);

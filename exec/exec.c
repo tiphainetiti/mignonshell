@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:58:04 by ocussy            #+#    #+#             */
-/*   Updated: 2025/04/24 18:50:45 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/25 16:11:31 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	callexecve(t_data *data)
 		exit_shell(data, 0, data->exit_code);
 	check_dir_error(data);
 	// Pour "$HOMEdskjhfkdshfsd"
-	// if (data->path == NULL || data->path[0] == '\0')
-	// 	exit_shell(data, 1, 127);
+	if (data->cmd->was_quoted && (data->cmd->cmd[0] == NULL
+			|| data->cmd->cmd[0][0] == '\0'))
+		exit_shell(data, 1, 127);
 	if (parsing_builtin(data) == 0 && data->cmd->cmd[0] != NULL)
 	{
 		get_path(data);
