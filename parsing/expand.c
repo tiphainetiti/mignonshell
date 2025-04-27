@@ -6,101 +6,52 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:04:16 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/25 16:36:17 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/27 17:27:32 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// Get USER len
-int	get_var_name_length(const char *str, int start)
+char	*result_quoted_expansion(char *result, t_quotes quotes)
 {
-	int	i;
-
-	i = start;
-	if (str[start] >= '0' && str[start] <= '9')
-		return (1);
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_' || str[i] == '*'))
-		i++;
-	return (i - start);
-}
-
-// Substract block and join with older block
-char	*join_block(char *result, const char *value, int block_start,
-		int block_end)
-{
-	char	*block;
 	char	*temp;
 
-	block = ft_substr(value, block_start, block_end - block_start);
-	temp = ft_strjoin(result, block);
-	free(result);
-	free(block);
+	temp = NULL;
+	if (quotes.inside_double_quotes)
+		temp = ft_strjoin(result, "$");
+	else
+		temp = ft_strdup(result);
 	return (temp);
 }
 
-// Get expanded value in env
-char	*get_expanded(char *var_name, int var_len, t_envt *envt)
+// i + 2 = start
+int	handle_quoted_expansion(char *value, int i, char quote_char, char **result)
 {
-	t_envt	*env;
-	char	*expanded;
+	char		*content;
+	char		*temp;
+	t_quotes	quotes;
 
-	env = envt;
-	expanded = NULL;
-	while (env)
-	{
-		if (ft_strncmp(env->str, var_name, var_len) == 0
-			&& env->str[var_len] == '=')
-		{
-			expanded = ft_substr(env->str, var_len + 1, ft_strlen(env->str)
-					- var_len - 1);
-			break ;
-		}
-		env = env->next;
-	}
-	return (expanded);
-}
-
-char	*append_to_result(char *result, char *to_append)
-{
-	char	*temp;
-
-	temp = ft_strjoin(result, to_append);
-	free(result);
-	return (temp);
-}
-
-void	update_quotes_state(char current_char, t_quotes *quotes)
-{
-	if (current_char == '"' && !quotes->inside_single_quotes)
-		quotes->inside_double_quotes = !quotes->inside_double_quotes;
-	else if (current_char == '\'' && !quotes->inside_double_quotes)
-		quotes->inside_single_quotes = !quotes->inside_single_quotes;
-}
-
-int	handle_quoted_expansion(char *value, int i, char quote_char, char **result,
-		int *new_i)
-{
-	int		start;
-	int		end;
-	char	*content;
-	char	*temp;
-
-	start = i + 2;
-	end = start;
+	int end, j;
+	j = 0;
+	quotes = (t_quotes){0, 0};
+	while (j < i)
+		update_quotes_state(value[j++], &quotes);
+	end = i + 2;
 	while (value[end] && value[end] != quote_char)
 		end++;
-	if (value[end] == quote_char)
+	if (value[end] != quote_char)
+		return (i);
+	if (end == i + 2)
+		temp = result_quoted_expansion(*result, quotes);
+	else
 	{
-		content = ft_substr(value, start, end - start);
+		content = ft_substr(value, i + 2, end - (i + 2));
 		temp = ft_strjoin(*result, content);
 		free(content);
-		free(*result);
-		*result = temp;
-		*new_i = end + 1;
-		return (1);
 	}
-	return (0);
+	free(*result);
+	*result = temp;
+	return (end + 1);
 }
 
 char	*expand_variables(char *value, t_data *data)
@@ -120,8 +71,7 @@ char	*expand_variables(char *value, t_data *data)
 	int			new_i;
 
 	env = data->envt;
-	quotes.inside_double_quotes = 0;
-	quotes.inside_single_quotes = 0;
+	quotes = (t_quotes){0, 0};
 	i = 0;
 	block_start = 0;
 	result = ft_strdup("");
@@ -137,8 +87,8 @@ char	*expand_variables(char *value, t_data *data)
 			if (value[i + 1] == '"' || value[i + 1] == '\'')
 			{
 				quoted_char = value[i + 1];
-				if (handle_quoted_expansion(value, i, quoted_char, &result,
-						&new_i))
+				new_i = handle_quoted_expansion(value, i, quoted_char, &result);
+				if (new_i != i)
 				{
 					i = new_i;
 					block_start = i;
@@ -192,7 +142,6 @@ char	*expand_variables(char *value, t_data *data)
 	// Ajouter tout caractère restant
 	if (i > block_start)
 		result = join_block(result, value, block_start, i);
-	printf("RESULTaTs: %s\n", result);
 	return (result);
 }
 
@@ -251,3 +200,51 @@ t_token	*expand_tokens(t_token *token, t_data *data)
 	}
 	return (head);
 }
+
+// A REVOIR : NORME GOOD ???
+/*
+static int	is_only_whitespace(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && is_whitespace(str[i]))
+		i++;
+	return (!str[i]);
+}
+
+static t_token	*process_command_token(t_token *current, t_token *prev,
+		t_token **head, t_data *data)
+{
+	char	*expanded;
+
+	expanded = expand_variables(current->value, data);
+	free(current->value);
+	current->value = expanded;
+	if (!expanded || !*expanded || is_only_whitespace(expanded))
+		return (skip_empty_token(current, prev, head));
+	return (current);
+}
+
+t_token	*expand_tokens(t_token *token, t_data *data)
+{
+	t_token	*head;
+	t_token	*current;
+	t_token	*prev;
+
+	current = token;
+	head = token;
+	prev = NULL;
+	while (current)
+	{
+		if (current->type == COMMAND)
+		{
+			current = process_command_token(current, prev, &head, data);
+			if (prev && prev->next != current)
+				continue ;
+		}
+		prev = current;
+		current = current->next;
+	}
+	return (head);
+}*/

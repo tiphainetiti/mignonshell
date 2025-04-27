@@ -51,6 +51,7 @@ SRC_FILES = exec/exec.c \
 			main.c \
 			parsing/cmds.c \
 			parsing/expand.c \
+			parsing/expand_utils.c \
 			parsing/syntax.c \
 			parsing/token.c \
 			parsing/utils.c \
