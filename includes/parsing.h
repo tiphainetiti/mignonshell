@@ -6,14 +6,24 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/27 17:24:41 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/28 16:45:26 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
 
-// parsing
+/************************		PARSING		************************/
+
+// tokens.c
+t_token	*tokenize(char *input, t_data *data);
+
+// tokens_utils.c
+bool	is_whitespace(char c);
+bool	is_special_char(char c);
+t_token	*create_token(char *value, int type);
+void	check_heredoc(char *temp, t_data *data);
+
 // cmds.c
 void	print_commands(t_cmd *cmds); // a retirer
 t_cmd	*create_command(void);
@@ -23,14 +33,11 @@ int		convert_redirection_type(char *token_value);
 bool	build_commands(t_data *data, t_token *tokens);
 
 // expand.c
-char	*result_quoted_expansion(char *result, t_quotes quotes);
-int		handle_quoted_expansion(char *value, int i, char quote_char,
-			char **result);
 char	*expand_variables(char *value, t_data *data);
 t_token	*skip_empty_token(t_token *current, t_token *prev, t_token **head);
-t_token	*expand_tokens(t_token *tokens, t_data *data);
+t_token	*expand_tokens(t_token *token, t_data *data);
 
-// expand_utils.c
+// expand_utils_1.c
 int		get_var_name_length(const char *str, int start);
 char	*join_block(char *result, const char *value, int block_start,
 			int block_end);
@@ -38,14 +45,18 @@ char	*get_expanded(char *var_name, int var_len, t_envt *envt);
 char	*append_to_result(char *result, char *to_append);
 void	update_quotes_state(char current_char, t_quotes *quotes);
 
+// expand_utils_2.c
+void	process_dollar(t_expand_state *state);
+
+// expand_utils_3.c
+char	*empty_quoted_expansion(char *result, t_quotes quotes);
+int		handle_quoted_expansion(char *value, int i, char quote_char,
+			char **result);
+
 // syntax.c
 bool	print_syntax_error(char *value, t_data *data);
 bool	print_quotes_error(char quotes_type, t_data *data);
 bool	check_syntax(t_token *tokens, t_data *data);
-
-// tokens.c
-bool	is_whitespace(char c);
-t_token	*tokenize(char *input, t_data *data);
 
 // utils.c
 void	free_cmd(t_cmd *cmd);

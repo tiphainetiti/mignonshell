@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:56 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/25 16:05:38 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/28 15:31:56 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,41 +106,62 @@ typedef struct s_data
 
 }						t_data;
 
-typedef struct s_cmd_str_token
+typedef struct s_expand_state
 {
-	char				*cmd_str;
-	t_cmd				**last_cmd;
-	t_token				**token;
+	t_quotes			quotes;
+	int					i;
+	int					block_start;
+	char				*result;
+	char				*value;
 	t_data				*data;
-	t_cmd				**cmd;
-}						t_cmd_str_token;
+	t_envt				*env;
+}						t_expand_state;
+
+/* Structure to hold expansion parameters */
+typedef struct s_quote_exp
+{
+	char				*value;
+	int					i;
+	char				quote_char;
+	char				**result;
+	t_quotes			quotes;
+}						t_quote_exp;
+
+// typedef struct s_cmd_str_token
+// {
+// 	char				*cmd_str;
+// 	t_cmd				**last_cmd;
+// 	t_token				**token;
+// 	t_data				*data;
+// 	t_cmd				**cmd;
+// }						t_cmd_str_token;
 
 // Only parsing
-typedef struct handle_cmd_str_args
-{
-	t_cmd				**last_cmd;
-	t_token				**token;
-	t_data				*data;
-	t_cmd				**cmd;
-	t_token				*tmp;
-}						t_handle_cmd_str_args;
+// typedef struct handle_cmd_str_args
+// {
+// 	t_cmd				**last_cmd;
+// 	t_token				**token;
+// 	t_data				*data;
+// 	t_cmd				**cmd;
+// 	t_token				*tmp;
+// }						t_handle_cmd_str_args;
 
-typedef struct s_process_token_args
-{
-	char				**cursor;
-	bool				*expect_command;
-	bool				*expect_file;
-	t_data				*data;
-	char				*input;
-}						t_process_token_args;
+// typedef struct s_process_token_args
+// {
+// 	char				**cursor;
+// 	bool				*expect_command;
+// 	bool				*expect_file;
+// 	t_data				*data;
+// 	char				*input;
+// }						t_process_token_args;
 
-typedef struct s_process_token2_args
-{
-	t_cmd				**last_cmd;
-	t_token				**token;
-	t_data				*data;
-	t_cmd				**cmd;
-	t_token				*tmp;
-}						t_process_token2_args;
+// typedef struct s_process_token2_args
+// {
+// 	t_cmd				**last_cmd;
+// 	t_token				**token;
+// 	t_data				*data;
+// 	t_cmd				**cmd;
+// 	t_token				*tmp;
+// }						t_process_token2_args;
 
 #endif

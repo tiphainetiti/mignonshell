@@ -49,11 +49,14 @@ SRC_FILES = exec/exec.c \
 			builtin/pwd.c \
 			builtin/unset.c\
 			main.c \
+			parsing/token.c \
+			parsing/token_utils.c \
 			parsing/cmds.c \
 			parsing/expand.c \
-			parsing/expand_utils.c \
+			parsing/expand_utils_1.c \
+			parsing/expand_utils_2.c \
+			parsing/expand_utils_3.c \
 			parsing/syntax.c \
-			parsing/token.c \
 			parsing/utils.c \
 			exec/signal.c \
 
