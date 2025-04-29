@@ -254,3 +254,11 @@ SUITE : Construction des commandes
 
 22/04 : Fusion OK, commencement des tests
 $HOMEjfpdavjopd : revoir expand.c --> t_token	*expand_tokens(t_token *tokens, t_data *data)
+
+
+29/04 :
+bash-5.1$ <>>
+bash: syntax error near unexpected token `>'
+
+minishell^^ $ echo <>>
+minishell: syntax error near unexpected token `>>'

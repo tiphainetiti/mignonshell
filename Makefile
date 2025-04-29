@@ -52,11 +52,16 @@ SRC_FILES = exec/exec.c \
 			parsing/token.c \
 			parsing/token_utils.c \
 			parsing/cmds.c \
+			parsing/cmds_utils.c \
+			parsing/cmds_quotes.c \
+			parsing/cmds_path.c \
 			parsing/expand.c \
 			parsing/expand_utils_1.c \
 			parsing/expand_utils_2.c \
 			parsing/expand_utils_3.c \
 			parsing/syntax.c \
+			parsing/syntax_utils_1.c \
+			parsing/syntax_utils_2.c \
 			parsing/utils.c \
 			exec/signal.c \
 

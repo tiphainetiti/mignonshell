@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/28 16:45:26 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/29 19:10:27 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,28 @@
 
 /************************		PARSING		************************/
 
-// tokens.c
-t_token	*tokenize(char *input, t_data *data);
-
-// tokens_utils.c
-bool	is_whitespace(char c);
-bool	is_special_char(char c);
-t_token	*create_token(char *value, int type);
-void	check_heredoc(char *temp, t_data *data);
-
 // cmds.c
-void	print_commands(t_cmd *cmds); // a retirer
-t_cmd	*create_command(void);
 void	add_arg_to_command(t_cmd *cmd, char *arg);
 void	add_redirection(t_cmd *cmd, char *filename, int type);
 int		convert_redirection_type(char *token_value);
 bool	build_commands(t_data *data, t_token *tokens);
+
+// cmds_utils.c
+t_cmd	*create_command(void);
+int		was_quoted(char *str, char *result);
+char	*copy_final_slashes(char *normalized, int final_slashes, int j);
+int		has_multiple_slashes(char *str);
+int		number_of_final_slashes(const char *path);
+
+// cmds_quotes.c
+// static void	process_quotes(char *str, char *result, int *j,
+// t_quotes *quotes);
+char	*remove_quotes(char *str, t_cmd *cmd);
+
+// cmds_path.c
+// static void	process_path_start(t_path_params *params, char *normalized);
+// static void	process_path_segment(t_path_params *params, char *normalized);
+char	*normalize_path(const char *path);
 
 // expand.c
 char	*expand_variables(char *value, t_data *data);
@@ -54,9 +60,27 @@ int		handle_quoted_expansion(char *value, int i, char quote_char,
 			char **result);
 
 // syntax.c
+bool	check_syntax(t_token *tokens, t_data *data);
+
+// syntax_utils_1.c
 bool	print_syntax_error(char *value, t_data *data);
 bool	print_quotes_error(char quotes_type, t_data *data);
-bool	check_syntax(t_token *tokens, t_data *data);
+bool	check_token_quotes(t_token *token, int *in_quotes, char *quotes_type);
+void	get_quotes_state(char c, int *in_quotes, char *quotes_type);
+
+// syntax_utils_2.c
+bool	check_redirection_pipe(t_token *current, t_data *data);
+bool	check_special_redir_case(t_token *current, t_data *data, t_token **ptr);
+bool	check_redir_target(t_token *current, t_data *data);
+
+// tokens.c
+t_token	*tokenize(char *input, t_data *data);
+
+// tokens_utils.c
+bool	is_whitespace(char c);
+bool	is_special_char(char c);
+t_token	*create_token(char *value, int type);
+void	check_heredoc(char *temp, t_data *data);
 
 // utils.c
 void	free_cmd(t_cmd *cmd);

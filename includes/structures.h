@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:56 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/28 15:31:56 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/29 18:25:20 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,32 +32,28 @@ typedef struct s_export
 
 typedef struct s_token
 {
-	char *value;          // Valeur du token (mot, opérateur)
-	size_t type;          // Type du token (WORD, PIPE, REDIR_IN, etc.)
-	struct s_token *next; // Pointeur vers le token suivant (liste chaînée)
+	char				*value;
+	size_t				type;
+	struct s_token		*next;
 
 }						t_token;
 
 typedef struct s_inofile
 {
-	char *filename;         // Nom du fichier
-	int type;               // Type de redirection (IN, OUT, APPEND, HEREDOC)
-	struct s_inofile *next; // Redirection suivante
+	char				*filename;
+	int					type;
+	struct s_inofile	*next;
 }						t_inofile;
 
 typedef struct s_cmd
 {
-	char **cmd;             // Tableau d'arguments (cmd[0] = commande)
-	struct s_inofile *file; // Liste des redirections
-	int nb_file;            // Nombre de redirections
-	int was_quoted;         // Il y avait des quotes en token
-	struct s_cmd *next;     // Commande suivante dans un pipeline
+	char				**cmd;
+	struct s_inofile	*file;
+	int					nb_file;
+	int					was_quoted;
+	struct s_cmd		*next;
 
 }						t_cmd;
-// Fonction: Structure finale après parsing, prête pour l'exécution.
-// cmd est un tableau de strings terminé par NULL
-// Le premier élément est la commande, les suivants sont les arguments
-// Contient les redirections associées à cette commande
 
 typedef struct s_limiter
 {
@@ -117,7 +113,7 @@ typedef struct s_expand_state
 	t_envt				*env;
 }						t_expand_state;
 
-/* Structure to hold expansion parameters */
+// Structure to hold expansion parameters
 typedef struct s_quote_exp
 {
 	char				*value;
@@ -127,41 +123,14 @@ typedef struct s_quote_exp
 	t_quotes			quotes;
 }						t_quote_exp;
 
-// typedef struct s_cmd_str_token
-// {
-// 	char				*cmd_str;
-// 	t_cmd				**last_cmd;
-// 	t_token				**token;
-// 	t_data				*data;
-// 	t_cmd				**cmd;
-// }						t_cmd_str_token;
-
-// Only parsing
-// typedef struct handle_cmd_str_args
-// {
-// 	t_cmd				**last_cmd;
-// 	t_token				**token;
-// 	t_data				*data;
-// 	t_cmd				**cmd;
-// 	t_token				*tmp;
-// }						t_handle_cmd_str_args;
-
-// typedef struct s_process_token_args
-// {
-// 	char				**cursor;
-// 	bool				*expect_command;
-// 	bool				*expect_file;
-// 	t_data				*data;
-// 	char				*input;
-// }						t_process_token_args;
-
-// typedef struct s_process_token2_args
-// {
-// 	t_cmd				**last_cmd;
-// 	t_token				**token;
-// 	t_data				*data;
-// 	t_cmd				**cmd;
-// 	t_token				*tmp;
-// }						t_process_token2_args;
+// Structure for path normalization parameters
+typedef struct s_path_params
+{
+	const char			*path;
+	int					i;
+	int					j;
+	int					final_slashes;
+	size_t				len;
+}						t_path_params;
 
 #endif
