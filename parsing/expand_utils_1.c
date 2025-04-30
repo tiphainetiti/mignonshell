@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*   expand_utils_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:22:22 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/27 17:23:54 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 16:35:57 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// Get USER len
+/* Get NAME_VAR len*/
 int	get_var_name_length(const char *str, int start)
 {
 	int	i;
@@ -25,7 +25,7 @@ int	get_var_name_length(const char *str, int start)
 	return (i - start);
 }
 
-// Substract block and join with older block
+/* Substract block and join with older block */
 char	*join_block(char *result, const char *value, int block_start,
 		int block_end)
 {
@@ -39,7 +39,7 @@ char	*join_block(char *result, const char *value, int block_start,
 	return (temp);
 }
 
-// Get expanded value in env
+/* Get expanded value in env */
 char	*get_expanded(char *var_name, int var_len, t_envt *envt)
 {
 	t_envt	*env;

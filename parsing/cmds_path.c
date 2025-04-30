@@ -6,11 +6,28 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 19:02:07 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/29 19:18:16 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:40:39 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+// Check if arg has multiple consecutive '/' : 1-yes 0-no
+static int	has_multiple_slashes(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !str[0])
+		return (0);
+	while (str[i] && str[i + 1])
+	{
+		if (str[i] == '/' && str[i + 1] == '/')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 // From the start : Get root directory and pass slashes
 static void	process_path_start(t_path_params *params, char *normalized)
@@ -19,8 +36,7 @@ static void	process_path_start(t_path_params *params, char *normalized)
 	{
 		normalized[params->j++] = '/';
 		params->i++;
-		while (params->path[params->i] == '/') /*
-			&&(i < (int)len - final_slashes) ???*/
+		while (params->path[params->i] == '/')
 			params->i++;
 	}
 }
@@ -44,8 +60,9 @@ static void	process_path_segment(t_path_params *params, char *normalized)
 	}
 }
 
-// Normalizes a path by removing consecutive slashes, ex : /////////bin//////ls
-char	*normalize_path(const char *path)
+/* Normalizes a path by removing consecutive slashes, ex :
+	/////////bin//////ls */
+static char	*normalize_path(const char *path)
 {
 	t_path_params	params;
 	char			*normalized;
@@ -61,4 +78,23 @@ char	*normalize_path(const char *path)
 	process_path_start(&params, normalized);
 	process_path_segment(&params, normalized);
 	return (copy_final_slashes(normalized, params.final_slashes, params.j));
+}
+
+/* Handles path normalization for the first argument if needed, ex :
+	///bin//////ls */
+char	*normalize_first_arg(char *arg, int arg_position)
+{
+	char	*normalized_arg;
+
+	normalized_arg = NULL;
+	if (arg_position == 0 && arg[0] == '/' && has_multiple_slashes(arg))
+	{
+		normalized_arg = normalize_path(arg);
+		if (normalized_arg)
+		{
+			free(arg);
+			return (normalized_arg);
+		}
+	}
+	return (arg);
 }

@@ -6,11 +6,12 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 16:36:47 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 14:36:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:50:49 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+
 static int	ft_count_word(const char *s, char c)
 {
 	int	i;

@@ -6,11 +6,12 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 16:17:41 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 14:36:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:50:43 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
 	t_list	*new_element;

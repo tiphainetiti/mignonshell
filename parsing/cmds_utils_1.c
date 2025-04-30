@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 18:17:09 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/29 19:05:25 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:34:46 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,6 @@ char	*copy_final_slashes(char *normalized, int final_slashes, int j)
 	return (normalized);
 }
 
-// Check if arg has multiple consecutive '/' : 1-yes 0-no
-int	has_multiple_slashes(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str || !str[0])
-		return (0);
-	while (str[i] && str[i + 1])
-	{
-		if (str[i] == '/' && str[i + 1] == '/')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 int	number_of_final_slashes(const char *path)
 {
 	int	i;
@@ -84,4 +67,18 @@ int	number_of_final_slashes(const char *path)
 		i--;
 	}
 	return (result);
+}
+
+/* Counts commands in linked list and assigns to data structure */
+void	count_and_assign_commands(t_data *data, t_cmd *cmd_head)
+{
+	t_cmd	*current;
+
+	current = cmd_head;
+	while (current)
+	{
+		data->nb_cmd++;
+		current = current->next;
+	}
+	data->cmd = cmd_head;
 }

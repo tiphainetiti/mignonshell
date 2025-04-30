@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:24:36 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/25 15:27:09 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:45:01 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,6 @@ void	free_cmd_list(t_cmd **cmd)
 	cmd = NULL;
 }
 
-void	free_limiter(t_limiter *limiter)
-{
-	if (limiter != NULL)
-	{
-		free(limiter->str);
-		free(limiter);
-	}
-}
-
-void	free_limiter_list(t_limiter **limiter)
-{
-	t_limiter	*current;
-	t_limiter	*next;
-
-	if (limiter == NULL)
-		return ;
-	current = *limiter;
-	while (current)
-	{
-		next = current->next;
-		free_limiter(current);
-		current = next;
-	}
-}
-
 void	free_redirection(t_inofile *file)
 {
 	t_inofile	*current;
@@ -113,28 +88,6 @@ void	free_tokens(t_token *tokens)
 		free(current);
 		current = next;
 	}
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
-		i++;
-	return (s1[i] - s2[i]);
-}
-
-char	*ft_strdups(const char *s)
-{
-	size_t	len;
-	char	*dup;
-
-	len = ft_strlen(s) + 1;
-	dup = malloc(len);
-	if (dup)
-		ft_memcpy(dup, s, len);
-	return (dup);
 }
 
 // Fonction pour afficher les tokens (debug)
@@ -176,7 +129,6 @@ void	print_commands(t_cmd *cmds)
 	while (current_cmd)
 	{
 		printf("Command %d:\n", cmd_idx++);
-		// Print arguments
 		if (current_cmd->cmd)
 		{
 			printf("  Arguments:\n");
@@ -189,7 +141,6 @@ void	print_commands(t_cmd *cmds)
 		}
 		else
 			printf("  No arguments\n");
-		// Print redirections
 		printf("  Redirections (%d):\n", current_cmd->nb_file);
 		current_file = current_cmd->file;
 		while (current_file)
@@ -208,7 +159,6 @@ void	print_commands(t_cmd *cmds)
 			printf(", File: '%s'\n", current_file->filename);
 			current_file = current_file->next;
 		}
-		// Print pipe information
 		if (current_cmd->next)
 			printf("  [PIPE] -> Command %d\n", cmd_idx);
 		printf("\n");

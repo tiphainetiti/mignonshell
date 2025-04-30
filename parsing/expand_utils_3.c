@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:57:07 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/28 15:32:54 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 16:39:35 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char	*empty_quoted_expansion(char *result, t_quotes quotes)
 	return (temp);
 }
 
-/* Process content between quotes in variable expansion */
 static int	process_content(t_quote_exp *exp)
 {
 	char	*content;

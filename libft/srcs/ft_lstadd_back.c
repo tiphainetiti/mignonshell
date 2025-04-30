@@ -6,11 +6,12 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 15:43:47 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 14:36:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:49:22 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*element;

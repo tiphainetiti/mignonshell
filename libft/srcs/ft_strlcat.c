@@ -6,11 +6,12 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:44:31 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 14:36:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:51:06 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	i;

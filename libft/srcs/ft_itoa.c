@@ -6,11 +6,12 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 19:16:39 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 14:36:59 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:49:19 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
+
 static int	ft_sizeint(int nb)
 {
 	int	size;

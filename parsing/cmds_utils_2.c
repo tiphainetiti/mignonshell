@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   cmds_utils_2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/08 17:30:46 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/30 14:49:07 by tlay             ###   ########.fr       */
+/*   Created: 2025/04/30 14:41:21 by tlay              #+#    #+#             */
+/*   Updated: 2025/04/30 14:41:36 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/libft.h"
+#include "../includes/minishell.h"
 
-size_t	ft_strlen(const char *str)
+// Copies existing command arguments to a new array
+char	**create_expanded_cmd_array(t_cmd *cmd, int size)
 {
-	int	n;
+	char	**new_cmd;
+	int		i;
 
-	n = 0;
-	while (str[n])
-		n++;
-	return (n);
+	new_cmd = malloc(sizeof(char *) * (size + 2));
+	if (!new_cmd)
+		return (NULL);
+	i = 0;
+	while (i < size)
+	{
+		new_cmd[i] = cmd->cmd[i];
+		i++;
+	}
+	return (new_cmd);
 }
-/*
-int	main(void)
-{
-	char str[] = "hello maurice 1!";
-
-	printf("%d\n", ft_strlen(str));
-	return (0);
-}*/

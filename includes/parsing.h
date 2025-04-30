@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/29 19:10:27 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 15:31:21 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,27 @@
 /************************		PARSING		************************/
 
 // cmds.c
-void	add_arg_to_command(t_cmd *cmd, char *arg);
-void	add_redirection(t_cmd *cmd, char *filename, int type);
-int		convert_redirection_type(char *token_value);
 bool	build_commands(t_data *data, t_token *tokens);
 
-// cmds_utils.c
+// cmds_utils_1.c
 t_cmd	*create_command(void);
 int		was_quoted(char *str, char *result);
 char	*copy_final_slashes(char *normalized, int final_slashes, int j);
-int		has_multiple_slashes(char *str);
 int		number_of_final_slashes(const char *path);
+void	count_and_assign_commands(t_data *data, t_cmd *cmd_head);
+
+// cmds_utils_2.c
+char	**create_expanded_cmd_array(t_cmd *cmd, int size);
+
+// cmds_redir.c
+int		convert_redirection_type(char *token_value);
+void	add_redirection(t_cmd *cmd, char *filename, int type);
 
 // cmds_quotes.c
-// static void	process_quotes(char *str, char *result, int *j,
-// t_quotes *quotes);
 char	*remove_quotes(char *str, t_cmd *cmd);
 
 // cmds_path.c
-// static void	process_path_start(t_path_params *params, char *normalized);
-// static void	process_path_segment(t_path_params *params, char *normalized);
-char	*normalize_path(const char *path);
+char	*normalize_first_arg(char *arg, int arg_position);
 
 // expand.c
 char	*expand_variables(char *value, t_data *data);
@@ -82,17 +82,19 @@ bool	is_special_char(char c);
 t_token	*create_token(char *value, int type);
 void	check_heredoc(char *temp, t_data *data);
 
-// utils.c
+// utils_1.c
 void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd **cmd);
-void	free_limiter(t_limiter *limiter);
-void	free_limiter_list(t_limiter **limiter);
 void	free_redirection(t_inofile *file);
 void	free_tokens(t_token *tokens);
-int		ft_strcmp(char *s1, char *s2);
-char	*ft_strdups(const char *s);
 void	print_tokens(t_token *tokens);
 void	print_commands(t_cmd *cmds);
+
+// utils_2.c
+void	free_limiter(t_limiter *limiter);
+void	free_limiter_list(t_limiter **limiter);
+int		ft_strcmp(char *s1, char *s2);
+char	*ft_strdups(const char *s);
 
 // // old
 // t_cmd		*pars_cmd(t_token **token, t_data *data);

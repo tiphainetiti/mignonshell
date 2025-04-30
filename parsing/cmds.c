@@ -6,51 +6,14 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:43:06 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/29 19:30:28 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 14:41:44 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// Handles path normalization for the first argument if needed, ex :
-/////bin//////ls
-static char	*normalize_first_arg(char *arg, int arg_position)
-{
-	char	*normalized_arg;
-
-	normalized_arg = NULL;
-	if (arg_position == 0 && arg[0] == '/' && has_multiple_slashes(arg))
-	{
-		normalized_arg = normalize_path(arg);
-		if (normalized_arg)
-		{
-			free(arg);
-			return (normalized_arg);
-		}
-	}
-	return (arg);
-}
-
-// Copies existing command arguments to a new array
-static char	**create_expanded_cmd_array(t_cmd *cmd, int size)
-{
-	char	**new_cmd;
-	int		i;
-
-	new_cmd = malloc(sizeof(char *) * (size + 2));
-	if (!new_cmd)
-		return (NULL);
-	i = 0;
-	while (i < size)
-	{
-		new_cmd[i] = cmd->cmd[i];
-		i++;
-	}
-	return (new_cmd);
-}
-
 // Add an argument to the command
-void	add_arg_to_command(t_cmd *cmd, char *arg)
+static void	add_arg_to_command(t_cmd *cmd, char *arg)
 {
 	int		i;
 	char	**new_cmd;
@@ -70,58 +33,6 @@ void	add_arg_to_command(t_cmd *cmd, char *arg)
 	new_cmd[i + 1] = NULL;
 	free(cmd->cmd);
 	cmd->cmd = new_cmd;
-}
-
-// Adds a new file node to the end of the command's file list
-static void	append_file_to_cmd(t_cmd *cmd, t_inofile *new_file)
-{
-	t_inofile	*current;
-
-	if (!cmd->file)
-		cmd->file = new_file;
-	else
-	{
-		current = cmd->file;
-		while (current->next)
-			current = current->next;
-		current->next = new_file;
-	}
-	cmd->nb_file++;
-}
-
-// Add redirection (t_inofile) to a cmd (input, output, append or heredoc)
-void	add_redirection(t_cmd *cmd, char *filename, int type)
-{
-	t_inofile	*new_file;
-	char		*unquoted_filename;
-
-	new_file = malloc(sizeof(t_inofile));
-	if (!new_file)
-		return ;
-	unquoted_filename = remove_quotes(filename, cmd);
-	if (!unquoted_filename)
-	{
-		free(new_file);
-		return ;
-	}
-	new_file->filename = unquoted_filename;
-	new_file->type = type;
-	new_file->next = NULL;
-	append_file_to_cmd(cmd, new_file);
-}
-
-int	convert_redirection_type(char *token_value)
-{
-	if (ft_strncmp(token_value, "<", 2) == 0)
-		return (INFILE);
-	else if (ft_strncmp(token_value, ">", 2) == 0)
-		return (OUTFILE);
-	else if (ft_strncmp(token_value, ">>", 2) == 0)
-		return (APPEND);
-	else if (ft_strncmp(token_value, "<<", 2) == 0)
-		return (HERE_DOC);
-	else
-		return (-1);
 }
 
 // Redirection must be followed by a type COMMAND
@@ -175,20 +86,6 @@ static bool	process_token_list(t_cmd *current_cmd, t_token *current)
 		current = current->next;
 	}
 	return (true);
-}
-
-/* Counts commands in linked list and assigns to data structure */
-static void	count_and_assign_commands(t_data *data, t_cmd *cmd_head)
-{
-	t_cmd	*current;
-
-	current = cmd_head;
-	while (current)
-	{
-		data->nb_cmd++;
-		current = current->next;
-	}
-	data->cmd = cmd_head;
 }
 
 bool	build_commands(t_data *data, t_token *tokens)

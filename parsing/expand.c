@@ -6,14 +6,14 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:04:16 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/28 15:05:18 by tlay             ###   ########.fr       */
+/*   Updated: 2025/04/30 16:37:00 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 /* Initialize the expansion state structure with default values */
-static void	init_expand_state(t_expand_state *state, char *value, t_data *data)
+void	init_expand_state(t_expand_state *state, char *value, t_data *data)
 {
 	state->quotes = (t_quotes){0, 0};
 	state->i = 0;
@@ -102,6 +102,7 @@ t_token	*expand_tokens(t_token *token, t_data *data)
 	return (head);
 }
 
+// OLD VERSION
 // char	*expand_variables(char *value, t_data *data)
 // {
 // 	t_envt		*env;
