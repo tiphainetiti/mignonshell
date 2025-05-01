@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/13 11:36:46 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/25 17:42:56 by ocussy           ###   ########.fr       */
+/*   Created: 2025/05/01 14:08:52 by tlay              #+#    #+#             */
+/*   Updated: 2025/05/01 14:55:34 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	unset_export(t_export **export, char *str)
+void	unset_export(t_export **export, char *var)
 {
 	t_export	*current;
 	t_export	*prev;
@@ -21,9 +21,9 @@ void	unset_export(t_export **export, char *str)
 	prev = NULL;
 	while (current)
 	{
-		if (ft_strcmp(current->key, str) == 0)
+		if (ft_strcmp(current->key, var) == 0)
 		{
-			if (prev == NULL)
+			if (!prev)
 				*export = current->next;
 			else
 				prev->next = current->next;
@@ -37,43 +37,43 @@ void	unset_export(t_export **export, char *str)
 	}
 }
 
-void	unset_env(t_envt **envt, char *str)
+void	unset_envt(t_envt **envt, char *var)
 {
 	t_envt	*current;
 	t_envt	*prev;
-	char	**tab_str;
+	char	**tab_var;
 
 	current = *envt;
 	prev = NULL;
 	while (current)
 	{
-		tab_str = ft_split(current->str, '=');
-		if (ft_strncmp(tab_str[0], str, ft_strlen(tab_str[0])) == 0)
+		tab_var = ft_split(current->str, '=');
+		if (tab_var && ft_strcmp(tab_var[0], var) == 0)
 		{
-			if (prev == NULL)
+			if (!prev)
 				*envt = current->next;
 			else
 				prev->next = current->next;
 			free(current->str);
 			free(current);
-			ft_free_tab(tab_str);
+			ft_free_tab(tab_var);
 			return ;
 		}
 		prev = current;
 		current = current->next;
-		ft_free_tab(tab_str);
+		ft_free_tab(tab_var);
 	}
 }
 
-void	make_unset(t_data *data, t_cmd *cmd, t_export **export)
+void	ft_unset(t_data *data, t_cmd *cmd)
 {
 	int	i;
 
 	i = 1;
-	while (cmd->cmd[i] != NULL)
+	while (cmd->cmd[i])
 	{
-		unset_export(export, cmd->cmd[i]);
-		unset_env(&data->envt, cmd->cmd[i]);
+		unset_export(&data->export, cmd->cmd[i]);
+		unset_envt(&data->envt, cmd->cmd[i]);
 		data->exit_code = 0;
 		i++;
 	}
@@ -91,5 +91,5 @@ void	execute_unset(t_data *data)
 		if (dup2(data->outfile, STDOUT_FILENO))
 			close(data->outfile);
 	}
-	make_unset(data, data->cmd, &data->export);
+	ft_unset(data, data->cmd);
 }

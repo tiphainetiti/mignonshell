@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 14:53:57 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/30 16:35:42 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/01 13:25:35 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	hande_exit_code_expand(t_expand_state *state)
 	state->block_start = state->i;
 }
 
-/* Get variable name expansion ($NAME) from env appends it to the result string */
+/* Get variable name expansion ($NAME) from env appends it to the result */
 static void	handle_var_name(t_expand_state *state, int var_len, int var_start)
 {
 	char	*var_name;

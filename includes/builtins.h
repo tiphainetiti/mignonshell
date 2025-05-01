@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:26:58 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/03 11:46:32 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/01 14:41:13 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,9 @@ void		get_pwd(t_data *data);
 void		execute_pwd(t_data *data);
 
 // unset
-
-void		unset_export(t_export **export, char *str);
-void		unset_env(t_envt **envt, char *str);
-void		make_unset(t_data *data, t_cmd *cmd, t_export **export);
+void		unset_export(t_export **export, char *var);
+void		unset_envt(t_envt **envt, char *var);
+void		ft_unset(t_data *data, t_cmd *cmd);
 void		execute_unset(t_data *data);
 
 #endif
