@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 14:11:02 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/25 15:52:22 by ocussy           ###   ########.fr       */
+/*   Updated: 2025/05/02 18:54:25 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void	heredoc_handler(int sig)
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	g_sig = 666;
+}
+
+static void	process_heredoc_line(char *line, int file)
+{
+	write(file, line, ft_strlen(line));
+	write(file, "\n", 1);
+	free(line);
 }
 
 void	ft_make_file(t_data *data, int file)
@@ -34,17 +41,16 @@ void	ft_make_file(t_data *data, int file)
 			line = readline("> ");
 		if (!line || g_sig == 666)
 		{
-			free(line);
+			if (line)
+				free(line);
 			break ;
 		}
-		if (ft_strcmp(line, data->limiter->str) == 0)
+		if (data->limiter->str && ft_strcmp(line, data->limiter->str) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(file, line, ft_strlen(line));
-		write(file, "\n", 1);
-		free(line);
+		process_heredoc_line(line, file);
 	}
 	dup2(data->tmp_heredoc, STDIN_FILENO);
 	close(data->tmp_heredoc);

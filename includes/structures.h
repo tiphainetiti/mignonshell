@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:56 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/29 18:25:20 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/01 18:43:12 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_cmd
 typedef struct s_limiter
 {
 	char				*str;
+	int					quoted;
 	struct s_limiter	*next;
 
 }						t_limiter;

@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:44 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/30 15:31:21 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/02 18:57:08 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ char	**create_expanded_cmd_array(t_cmd *cmd, int size);
 
 // cmds_redir.c
 int		convert_redirection_type(char *token_value);
-void	add_redirection(t_cmd *cmd, char *filename, int type);
+void	add_redirection(t_cmd *cmd, char *filename, int type,
+			t_limiter **limiter);
 
 // cmds_quotes.c
 char	*remove_quotes(char *str, t_cmd *cmd);
@@ -87,8 +88,12 @@ void	free_cmd(t_cmd *cmd);
 void	free_cmd_list(t_cmd **cmd);
 void	free_redirection(t_inofile *file);
 void	free_tokens(t_token *tokens);
+
+// DEBUG
 void	print_tokens(t_token *tokens);
 void	print_commands(t_cmd *cmds);
+void	print_all_limiters(t_data *data);
+void	print_limiter(t_limiter *limiter);
 
 // utils_2.c
 void	free_limiter(t_limiter *limiter);

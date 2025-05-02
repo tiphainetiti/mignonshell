@@ -1,0 +1,54 @@
+// heredoc ne marchent pas
+<< cat cat
+
+
+> /dev/stdin cat | /dev/stdout
+
+
+
+// pas fixable imediatement, faire expand avant tokenisation
+minishell^^ $ export a='ls -'
+minishell^^ $ export b='la'
+minishell^^ $ $a$b
+minishell: ls -la: command not found
+
+bash-5.1$ export a='ls -'
+bash-5.1$ export b='la'
+bash-5.1$ $a$b
+total 4708
+drwx------ 24 tlay 2023_paris   8192 May  1 17:29 .
+drwxr-xr-x 13 root root         4096 May  1 13:53 ..
+-rw-------  1 tlay 2023_paris     50 Apr 17 16:21 .bash_history
+lrwxrwxrwx  1 tlay 2023_paris     20 Feb 13 16:05 .cache -> /goinfre/tlay/.cache
+drwx------ 27 tlay 2023_paris   4096 Apr 22 17:49 .config
+
+
+
+// pas tres important
+remplacer les bash par minishell^^ dans le messages d'erreur
+
+// A REVOIR :
+> export NAME="titi"
+> cat << EOF
+hello $NAME
+$PWD
+EOF
+
+> << cat cat
+
+- static void add_limiter(t_inofile *file, t_data *data, int quoted)
+- char	*get_env_var(char *var_name, t_envt *envt)
+- char	*expand_heredoc_line(char *line, t_envt *envt)
+- void	ft_make_file(t_data *data, int file)
+- void	ft_strjoin_part(char **dest, const char *src, int start, int len);
+- void	ft_strjoin_free(char **dest, char *str);
+
+
+code retour du ctrl C dans le heredoc
+message d'erreur pour ctrl D dans heredoc
+
+SUITE :
+    - gerer expand dans here doc ?
+    - code retour du ctrl C dans le heredoc
+    - message d'erreur pour ctrl D dans heredoc
+    - refaire les tests

@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:24:36 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/30 14:45:01 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/02 18:21:16 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void	print_commands(t_cmd *cmds)
 				printf("HEREDOC (<<)");
 			else
 				printf("UNKNOWN (%d)", current_file->type);
-			printf(", File: '%s'\n", current_file->filename);
+			printf(", File: %s\n", current_file->filename);
 			current_file = current_file->next;
 		}
 		if (current_cmd->next)
@@ -165,4 +165,49 @@ void	print_commands(t_cmd *cmds)
 		current_cmd = current_cmd->next;
 	}
 	printf("===============\n\n");
+}
+
+void	print_limiter(t_limiter *limiter)
+{
+	if (limiter && limiter->str)
+	{
+		ft_putstr_fd("Current limiter: ", 1);
+		ft_putstr_fd(limiter->str, 1);
+		ft_putstr_fd("\nQuoted: ", 1);
+		ft_putnbr_fd(limiter->quoted, 1);
+		ft_putstr_fd("\n======================\n\n", 1);
+	}
+	else
+	{
+		ft_putstr_fd("No limiter (NULL)\n", 1);
+		ft_putstr_fd("======================\n\n", 1);
+	}
+}
+
+void	print_all_limiters(t_data *data)
+{
+	t_limiter	*current;
+	int			i;
+
+	i = 0;
+	ft_putstr_fd("\n=== ALL LIMITERS ===\n", 1);
+	if (!data || !data->limiter)
+	{
+		ft_putstr_fd("No limiters found\n", 1);
+		ft_putstr_fd("===================\n\n", 1);
+		return ;
+	}
+	current = data->limiter;
+	while (current)
+	{
+		ft_putstr_fd("Limiter ", 1);
+		ft_putnbr_fd(i++, 1);
+		ft_putstr_fd(": ", 1);
+		ft_putstr_fd(current->str ? current->str : "NULL", 1);
+		ft_putstr_fd(" (Quoted: ", 1);
+		ft_putnbr_fd(current->quoted, 1);
+		ft_putstr_fd(")\n", 1);
+		current = current->next;
+	}
+	ft_putstr_fd("===================\n\n", 1);
 }

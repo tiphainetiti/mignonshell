@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:35:29 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/28 16:52:24 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/02 18:58:58 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	do_minishell(t_data *data, char *input)
 	if (!build_commands(data, token))
 		return (free_tokens(token), free(input));
 	// print_commands(data->cmd);
+	// print_all_limiters(data);
 	exec(data);
 	if (data->pid)
 		free(data->pid);

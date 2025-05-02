@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:43:06 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/30 14:41:44 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/02 18:21:01 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,17 @@ static void	add_arg_to_command(t_cmd *cmd, char *arg)
 }
 
 // Redirection must be followed by a type COMMAND
-static bool	handle_redirection_token(t_cmd *cmd, t_token **current)
+static bool	handle_redirection_token(t_cmd *cmd, t_token **current,
+		t_limiter **limiter)
 {
 	int	redir_type;
 
 	if ((*current)->next && (*current)->next->type == COMMAND)
 	{
 		redir_type = convert_redirection_type((*current)->value);
-		if (redir_type != -1)
-		{
-			add_redirection(cmd, (*current)->next->value, redir_type);
-			*current = (*current)->next;
-			return (true);
-		}
+		add_redirection(cmd, (*current)->next->value, redir_type, limiter);
+		*current = (*current)->next;
+		return (true);
 	}
 	return (false);
 }
@@ -67,7 +65,8 @@ static bool	handle_pipe_token(t_cmd **cmd)
 }
 
 // Go though each tokens
-static bool	process_token_list(t_cmd *current_cmd, t_token *current)
+static bool	process_token_list(t_cmd *current_cmd, t_token *current,
+		t_limiter **limiter)
 {
 	while (current)
 	{
@@ -75,7 +74,7 @@ static bool	process_token_list(t_cmd *current_cmd, t_token *current)
 			add_arg_to_command(current_cmd, current->value);
 		else if (current->type == REDIRECTION)
 		{
-			if (!handle_redirection_token(current_cmd, &current))
+			if (!handle_redirection_token(current_cmd, &current, limiter))
 				return (false);
 		}
 		else if (current->type == PIPE)
@@ -97,7 +96,7 @@ bool	build_commands(t_data *data, t_token *tokens)
 	if (!current_cmd)
 		return (false);
 	cmd_head = current_cmd;
-	if (!process_token_list(current_cmd, tokens))
+	if (!process_token_list(current_cmd, tokens, &data->limiter))
 		return (false);
 	count_and_assign_commands(data, cmd_head);
 	free_tokens(tokens);

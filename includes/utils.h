@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:28:05 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/02 16:26:47 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/02 18:55:24 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,10 @@ void		disable_echoctl(void);
 
 char		*search_filename(t_data *data, char *filename);
 int			ft_open_file(t_data *data, char **filename);
+// char		*get_env_var(char *var_name, t_envt *envt);
+// char		*expand_heredoc_line(char *line, t_envt *envt);
+// void		ft_strjoin_part(char **dest, const char *src, int start, int len);
+// void		ft_strjoin_free(char **dest, char *str);
 
 // here_doc
 
