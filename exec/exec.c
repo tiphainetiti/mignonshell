@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/03 14:58:04 by ocussy            #+#    #+#             */
-/*   Updated: 2025/05/02 17:38:45 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/06 01:33:07 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	exec(t_data *data)
 	}
 	else
 		free_cmd_list(&data->cmd);
-	if (g_sig == 130)
+	if (g_sig == 666 || g_sig == 130)
 	{
 		data->exit_code = 130;
 		g_sig = 0;

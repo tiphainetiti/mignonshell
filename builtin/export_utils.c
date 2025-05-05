@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 18:06:12 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/15 15:35:31 by ocussy           ###   ########.fr       */
+/*   Updated: 2025/05/06 00:08:09 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,9 @@ int	print_export(t_data *data, t_export **export)
 		while (tmp)
 		{
 			if (tmp->value)
-				printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+				printf("export %s=\"%s\"\n", tmp->key, tmp->value);
 			else
-				printf("declare -x %s\n", tmp->key);
+				printf("export %s\n", tmp->key);
 			tmp = tmp->next;
 		}
 		data->exit_code = 0;

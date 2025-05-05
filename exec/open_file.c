@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 12:01:32 by ocussy            #+#    #+#             */
-/*   Updated: 2025/04/22 17:32:34 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/06 01:22:08 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,22 @@
 
 void	error_open(t_data *data, t_inofile *current, int fd)
 {
+	char	*message;
+
+	message = NULL;
 	if (fd == -1 && errno == ENOENT && data->error_file == 0)
 	{
-		printf("bash: %s: No such file or directory\n", current->filename);
+		print_error_message(current->filename, ": No such file or directory\n");
 		data->exit_code = 1;
 	}
 	if (fd == -1 && errno == EISDIR && data->error_file == 0)
 	{
-		printf("bash: %s: Is a directory\n", current->filename);
+		print_error_message(current->filename, ": Is a directory\n");
 		data->exit_code = 1;
 	}
 	if (fd == -1 && errno == ENOTDIR && data->error_file == 0)
 	{
-		printf("bash: %s: Not a directory\n", current->filename);
+		print_error_message(current->filename, ": Not a directory\n");
 		data->exit_code = 1;
 	}
 }

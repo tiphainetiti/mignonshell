@@ -48,6 +48,21 @@ message d'erreur pour ctrl D dans heredoc
 
 SUITE :
     - gerer expand dans here doc ?
-    - code retour du ctrl C dans le heredoc
     - message d'erreur pour ctrl D dans heredoc
     - refaire les tests
+
+
+FIX :
+mimishell;-* $ asd  | asd
+minishell: asd: commanmdi nnioshellt:  faounsd: d
+command not found
+
+code retour ctrl c heredoc
+
+cd: error retrieving current directory: getcwd: cannotaccess parent directories: No such file or directory
+
+
+> main.c cat | >> out  | cat
+
+
+pourquoi declare -x ?

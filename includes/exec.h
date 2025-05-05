@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:27:18 by tlay              #+#    #+#             */
-/*   Updated: 2025/04/25 15:57:19 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/06 01:14:33 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	exec(t_data *data);
 // utils_exec_4
 void	check_dir_error(t_data *data);
 void	handle_sigquit_command(int sig);
+char	*ft_strjoin3(char *s1, char *s2, char *s3);
+void	print_error_message(char *filename, char *error_text);
 
 // utils_exec_3
 

@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 14:11:02 by ocussy            #+#    #+#             */
-/*   Updated: 2025/05/05 19:30:31 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/06 00:51:23 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_make_file(t_data *data, int file)
 {
 	char	*line;
 
+	line = NULL;
 	data->tmp_heredoc = dup(STDIN_FILENO);
 	handle_signal(1);
 	g_sig = 0;

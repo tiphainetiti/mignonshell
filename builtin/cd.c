@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ocussy <ocussy@student.42.fr>              +#+  +:+       +#+        */
+/*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 11:29:55 by ocussy            #+#    #+#             */
-/*   Updated: 2024/10/25 17:42:34 by ocussy           ###   ########.fr       */
+/*   Updated: 2025/05/06 00:59:33 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	change_directory_and_update_env(t_data *data, char *path)
 	current_pwd = getcwd(NULL, 0);
 	if (current_pwd == NULL)
 	{
-		perror("cd: error retrieving current directory");
+		perror("cd: error retrieving current directory\n");
 		return ;
 	}
 	set_pwds_env(data, data->envt, current_pwd);
@@ -73,7 +73,7 @@ void	make_cd(t_data *data, t_cmd *cmd)
 	current_pwd = getcwd(NULL, 0);
 	if (current_pwd == NULL)
 	{
-		printf("cd: error retrieving current directory: getcwd: cannot");
+		printf("cd: error retrieving current directory: getcwd: cannot ");
 		printf("access parent directories: No such file or directory\n");
 		while (current_pwd == NULL)
 		{
