@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 15:28:05 by tlay              #+#    #+#             */
-/*   Updated: 2025/05/02 18:55:24 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/05 19:26:57 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void		disable_echoctl(void);
 
 char		*search_filename(t_data *data, char *filename);
 int			ft_open_file(t_data *data, char **filename);
+void		ft_process_file(t_data *data, int file);
+char		*ft_init_file(t_data *data);
 // char		*get_env_var(char *var_name, t_envt *envt);
 // char		*expand_heredoc_line(char *line, t_envt *envt);
 // void		ft_strjoin_part(char **dest, const char *src, int start, int len);
@@ -70,7 +72,5 @@ int			ft_open_file(t_data *data, char **filename);
 void		heredoc_handler(int sig);
 int			ft_process_line(t_data *data, char *line, int file);
 void		ft_make_file(t_data *data, int file);
-void		ft_process_file(t_data *data, int file);
-char		*ft_init_file(t_data *data);
 
 #endif

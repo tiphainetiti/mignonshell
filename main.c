@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 17:35:29 by tlay              #+#    #+#             */
-/*   Updated: 2025/05/02 18:58:58 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/05 20:07:56 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	shell_loop(t_data data)
 		handle_signal(0);
 		data.infile = STDIN_FILENO;
 		data.outfile = STDOUT_FILENO;
-		input = readline("minishell^^ $ ");
+		input = readline("mimishell;-* $ ");
 		if (g_sig == 1)
 			data.exit_code = 130;
 		if (!input)

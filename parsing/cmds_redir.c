@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 14:30:53 by tlay              #+#    #+#             */
-/*   Updated: 2025/05/02 18:58:24 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/05 19:50:43 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,12 @@ t_inofile	*create_inofile(char *filename, int type)
 	if (type == HERE_DOC)
 		new_inofile->filename = ft_strdup("heredoc");
 	else
-		new_inofile->filename = filename;
+		new_inofile->filename = ft_strdup(filename);
+	if (!new_inofile->filename)
+	{
+		free(new_inofile);
+		return (NULL);
+	}
 	new_inofile->type = type;
 	new_inofile->next = NULL;
 	return (new_inofile);

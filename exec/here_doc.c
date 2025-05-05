@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 14:11:02 by ocussy            #+#    #+#             */
-/*   Updated: 2025/05/02 18:54:25 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/05 19:30:31 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,33 @@ static void	process_heredoc_line(char *line, int file)
 	free(line);
 }
 
+static void	handle_eof_heredoc(t_data *data)
+{
+	ft_putstr_fd("minishell: warning: here-document delimited by end-of-file",
+		2);
+	ft_putstr_fd(" (wanted `", 2);
+	if (data->limiter && data->limiter->str)
+		ft_putstr_fd(data->limiter->str, 2);
+	ft_putstr_fd("')\n", 2);
+	data->exit_code = 0;
+}
+
+static int	check_line_status(t_data *data, char *line)
+{
+	if (!line && g_sig != 666)
+	{
+		handle_eof_heredoc(data);
+		return (1);
+	}
+	else if (!line || g_sig == 666)
+	{
+		if (line)
+			free(line);
+		return (1);
+	}
+	return (0);
+}
+
 void	ft_make_file(t_data *data, int file)
 {
 	char	*line;
@@ -39,12 +66,8 @@ void	ft_make_file(t_data *data, int file)
 	{
 		if (g_sig != 666)
 			line = readline("> ");
-		if (!line || g_sig == 666)
-		{
-			if (line)
-				free(line);
+		if (check_line_status(data, line))
 			break ;
-		}
 		if (data->limiter->str && ft_strcmp(line, data->limiter->str) == 0)
 		{
 			free(line);
@@ -54,27 +77,4 @@ void	ft_make_file(t_data *data, int file)
 	}
 	dup2(data->tmp_heredoc, STDIN_FILENO);
 	close(data->tmp_heredoc);
-}
-
-void	ft_process_file(t_data *data, int file)
-{
-	if (file != -1)
-	{
-		ft_make_file(data, file);
-		if (close(file) == -1)
-		{
-			ft_putstr_fd("Erreur lors de la fermeture du fichier.\n", 2);
-			data->exit_code = 1;
-		}
-	}
-}
-
-char	*ft_init_file(t_data *data)
-{
-	char	*filename;
-	int		file;
-
-	file = ft_open_file(data, &filename);
-	ft_process_file(data, file);
-	return (filename);
 }

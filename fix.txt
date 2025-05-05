@@ -44,7 +44,6 @@ EOF
 - void	ft_strjoin_free(char **dest, char *str);
 
 
-code retour du ctrl C dans le heredoc
 message d'erreur pour ctrl D dans heredoc
 
 SUITE :

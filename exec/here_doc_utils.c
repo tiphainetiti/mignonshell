@@ -6,7 +6,7 @@
 /*   By: tlay <tlay@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 10:37:44 by ocussy            #+#    #+#             */
-/*   Updated: 2025/05/02 18:55:04 by tlay             ###   ########.fr       */
+/*   Updated: 2025/05/05 19:23:20 by tlay             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,29 @@ int	ft_open_file(t_data *data, char **filename)
 		data->exit_code = 1;
 	}
 	return (file);
+}
+
+void	ft_process_file(t_data *data, int file)
+{
+	if (file != -1)
+	{
+		ft_make_file(data, file);
+		if (close(file) == -1)
+		{
+			ft_putstr_fd("Erreur lors de la fermeture du fichier.\n", 2);
+			data->exit_code = 1;
+		}
+	}
+}
+
+char	*ft_init_file(t_data *data)
+{
+	char	*filename;
+	int		file;
+
+	file = ft_open_file(data, &filename);
+	ft_process_file(data, file);
+	return (filename);
 }
 
 // char	*get_env_var(char *var_name, t_envt *envt)
